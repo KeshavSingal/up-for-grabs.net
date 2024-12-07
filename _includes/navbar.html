@@ -1,0 +1,87 @@
+<nav class="nav-menu">
+    <ul>
+        <li><a href="#i-want-to-get-involved">Get Involved</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#i-maintain-a-project">Maintain a Project</a></li>
+    </ul>
+</nav>
+
+<style>
+.nav-menu {
+    padding: 15px 0;
+    text-align: center;
+    background-color: #fff;
+    margin: 20px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.nav-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.nav-menu li {
+    display: inline-block;
+}
+
+.nav-menu a {
+    color: #2F4F6A;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.nav-menu a:hover {
+    color: #1a2f40;
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.nav-menu a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Calculate distance to scroll
+                    const startPosition = window.pageYOffset;
+                    const targetPosition = targetElement.getBoundingClientRect().top + startPosition;
+                    const distance = targetPosition - startPosition;
+                    
+                    // Slower, smoother scroll animation
+                    const duration = 1500; // Increased duration (in milliseconds)
+                    const start = performance.now();
+                    
+                    function animate(currentTime) {
+                        const timeElapsed = currentTime - start;
+                        const progress = Math.min(timeElapsed / duration, 1);
+                        
+                        // Easing function for smoother acceleration/deceleration
+                        const easeInOutCubic = progress => {
+                            return progress < 0.5
+                                ? 4 * progress * progress * progress
+                                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                        };
+                        
+                        window.scrollTo(0, startPosition + (distance * easeInOutCubic(progress)));
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        }
+                    }
+                    
+                    requestAnimationFrame(animate);
+                    history.pushState(null, null, targetId);
+                }
+            });
+        });
+    });
+    </script>
