@@ -1,12 +1,11 @@
-var assert = require('assert'),
-  jsdom = require('jsdom');
+const { JSDOM } = require('jsdom');
 
-describe('Navbar', function () {
-  var window, document;
+describe('Navbar', () => {
+  let window, document;
 
-  beforeEach(function () {
+  beforeEach(() => {
     // Set up a simple DOM environment
-    const dom = new jsdom.JSDOM(
+    const dom = new JSDOM(
       `
       <nav class="nav-menu">
         <ul>
@@ -35,35 +34,35 @@ describe('Navbar', function () {
   });
 
   // Test 1: Basic structure
-  it('should have navigation menu', function () {
-    var nav = document.querySelector('.nav-menu');
-    assert.notEqual(nav, null);
+  it('should have navigation menu', () => {
+    const nav = document.querySelector('.nav-menu');
+    expect(nav).not.toBeNull();
   });
 
   // Test 2: Number of links
-  it('should have three navigation links', function () {
-    var links = document.querySelectorAll('.nav-menu a');
-    assert.equal(links.length, 3);
+  it('should have three navigation links', () => {
+    const links = document.querySelectorAll('.nav-menu a');
+    expect(links).toHaveLength(3);
   });
 
   // Test 3: Link hrefs
-  it('should have correct href attributes', function () {
-    var links = document.querySelectorAll('.nav-menu a');
-    assert.equal(links[0].getAttribute('href'), '#i-want-to-get-involved');
-    assert.equal(links[1].getAttribute('href'), '#projects');
-    assert.equal(links[2].getAttribute('href'), '#i-maintain-a-project');
+  it('should have correct href attributes', () => {
+    const links = document.querySelectorAll('.nav-menu a');
+    expect(links[0].getAttribute('href')).toBe('#i-want-to-get-involved');
+    expect(links[1].getAttribute('href')).toBe('#projects');
+    expect(links[2].getAttribute('href')).toBe('#i-maintain-a-project');
   });
 
   // Test 4: Link text
-  it('should have correct link text', function () {
-    var links = document.querySelectorAll('.nav-menu a');
-    assert.equal(links[0].textContent, 'Get Involved');
-    assert.equal(links[1].textContent, 'Projects');
-    assert.equal(links[2].textContent, 'Maintain a Project');
+  it('should have correct link text', () => {
+    const links = document.querySelectorAll('.nav-menu a');
+    expect(links[0].textContent).toBe('Get Involved');
+    expect(links[1].textContent).toBe('Projects');
+    expect(links[2].textContent).toBe('Maintain a Project');
   });
 
   // Test 5: Basic scroll check
-  it('should call scrollTo when link is clicked', function (done) {
+  it('should call scrollTo when link is clicked', async () => {
     // Setup click handler
     document
       .querySelector('.nav-menu a')
@@ -75,10 +74,10 @@ describe('Navbar', function () {
     // Click the link
     document.querySelector('.nav-menu a').click();
 
+    // Wait for any async operations
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
     // Check if scrollTo was called
-    setTimeout(() => {
-      assert.equal(window.scrollTo.mock.calls.length > 0, true);
-      done();
-    }, 50);
+    expect(window.scrollTo).toHaveBeenCalled();
   });
 });
